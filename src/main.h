@@ -15,7 +15,10 @@
 #define BYTE_SWAP_32(x) ((uint32_t)( _BYTE1(x)<<24 | _BYTE2(x)<<16 | _BYTE3(x)<<8 | _BYTE4(x) ))
 
 
+
 char pup_dec_dir[0x100];
+
+int pup_type;
 
 int file_count;
 int image_version;

@@ -23,6 +23,9 @@ int SfcExtractPupFiles(pup_dec_dir, file_check, i, file_count, header_buffer){
 	int base_addr2 = (0x80 + (0x20 * file_count)) + (0x40 * i);
 
 
+	printf("File Count : %d / %d\n\n", (i+1), file_count);
+
+
 	int file_entry_id = header_buffer_u32t[base_addr1 / 4];
 	int entry_file_name = GetFileEntryID(file_entry_id);
 	printf("FileEntry%d : %s\n\n",i, entry_file_name);
@@ -53,9 +56,7 @@ int SfcExtractPupFiles(pup_dec_dir, file_check, i, file_count, header_buffer){
 
 	if(fd >= 0){
 
-		printf("Success.\n\n");
-
-		printf("%s\n\n",write_file_name);
+		printf("Success.(%s)\n\n",write_file_name);
 
 		printf("Read File Offset ... ");
 
@@ -79,29 +80,29 @@ int SfcExtractPupFiles(pup_dec_dir, file_check, i, file_count, header_buffer){
 
 				if(sic >= 0){
 
-					printf("Success.\n\n");
+					printf("Success.");
 
 				}else{
 
-					printf("Failed.\n\n");
+					printf("Failed.");
 
 				}
 
 			}else{
 
-				printf("Failed.\n\n");
+				printf("Failed.");
 
 			}
 
 		}else{
 
-			printf("Failed.\n\n");
+			printf("Failed.");
 
 		}
 
 	}else{
 
-		printf("Failed.\n\n");
+		printf("Failed.");
 
 	}
 

@@ -35,19 +35,8 @@ int SfcGetPupInfo(header_buffer_){
 	printf("Package Length : %dByte\n\n",package_length);
 
 
-	pup_type = SfcGetPupType(header_buffer[0x3C]);
-	printf("PUP Type : %s\n\n\n",pup_type);
 
-
-
-}
-
-
-int SfcGetPupType(a1){
-
-	int pup_type;
-
-	switch (a1){
+	switch (header_buffer[0x3C]){
 
 		case 4:pup_type = "TestKit";break;
 		//case 3:pup_type = "???";break;
@@ -58,16 +47,24 @@ int SfcGetPupType(a1){
 
 	}
 
-	return pup_type;
+
+
+	printf("PUP Type : %s\n\n\n",pup_type);
+
+	return 0;
 
 }
 
 
+
+
+
 int GetFileEntryID(e1){
 
-	int Entry_File;
+	const char* Entry_File;
 
 	switch (e1) {
+
 
 			case 0x100:Entry_File = "version.txt";break;
 			case 0x101:Entry_File = "license.xml";break;
@@ -76,7 +73,6 @@ int GetFileEntryID(e1){
 
 			case 0x221:Entry_File = "psv_package_data01.pkg";break;
 			case 0x231:Entry_File = "psv_package_data02.pkg";break;
-
 
 			case 0x301:Entry_File = "package_data01.pkg";break;
 			case 0x302:Entry_File = "package_data02.pkg";break;
@@ -117,7 +113,6 @@ int GetFileEntryID(e1){
 			case 0x324:Entry_File = "unknown_0x324";break;
 			case 0x325:Entry_File = "unknown_0x325";break;
 
-
 			case 0x326:Entry_File = "debug_data00.pkg";break;
 			case 0x327:Entry_File = "debug_data01.pkg";break;
 			case 0x328:Entry_File = "debug_data02.pkg";break;
@@ -125,7 +120,6 @@ int GetFileEntryID(e1){
 			case 0x32A:Entry_File = "debug_data04.pkg";break;
 			case 0x32B:Entry_File = "debug_data05.pkg";break;
 			case 0x32C:Entry_File = "debug_data06.pkg";break;
-
 
 			case 0x32D:Entry_File = "unknown_0x32D";break;
 			case 0x32E:Entry_File = "unknown_0x32E";break;
@@ -140,9 +134,9 @@ int GetFileEntryID(e1){
 			case 0x337:Entry_File = "unknown_0x337";break;
 			case 0x338:Entry_File = "unknown_0x338";break;
 
-
 			case 0x400:Entry_File = "package_scewm.wm";break;
 			case 0x401:Entry_File = "package_sceas.as";break;
+
 
 			default:{
 

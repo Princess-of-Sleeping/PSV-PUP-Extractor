@@ -3,55 +3,17 @@
 #include <string.h>
 
 #include <psp2/kernel/processmgr.h>
-#include <psp2/kernel/modulemgr.h>
+
+#include <psp2/ctrl.h>
 
 #include <psp2/io/dirent.h>
 #include <psp2/io/fcntl.h>
 #include <psp2/io/stat.h>
 
-#include <psp2/sysmodule.h>
-#include <psp2/types.h>
 
 #include "main.h"
 #include "graphics.h"
 
-
-
-
-uint32_t SfcGetAddressIsLittle(const void *buf, size_t int_byte, size_t read_byte) {
-
-	const uint8_t *p;
-
-	p = buf;
-
-	for(int i=int_byte;i<(int_byte + read_byte);i++){
-
-		printf("%02X", p[i]);
-
-	}
-
-	return 0;
-
-}
-
-
-uint32_t SfcGetAddressIsBig(const void *buf, size_t int_byte, size_t read_byte){
-
-	const uint8_t *p;
-
-	p = buf;
-
-	int i;
-
-	for(i=(int_byte + read_byte - 1);i>=int_byte;i--){
-
-		printf("%02X", p[i]);
-
-	}
-
-	return 0;
-
-}
 
 
 
@@ -99,12 +61,12 @@ int SfcPupExtractor(pup_path) {
 		   header_buffer[2] == 0x45 &&
 		   header_buffer[3] == 0x55 &&
 		   header_buffer[4] == 0x46 &&
-		   header_buffer[5] == 0x00 &&
-		   header_buffer[6] == 0x00 &&
-		   header_buffer[7] == 0x01){
+		   header_buffer[5] == 0x0 &&
+		   header_buffer[6] == 0x0 &&
+		   header_buffer[7] == 0x1){
 
 
-			printf("ok, PUP file.\n\n");
+			printf("ok, SONY PSV PUP file.\n\n");
 
 
 			SfcGetPupInfo(header_buffer);
@@ -121,15 +83,26 @@ int SfcPupExtractor(pup_path) {
 
 			NotExistMkdir(pup_dec_dir);
 
-
+			SceCtrlData buf;
 
 			for(int i=0;i<file_count;i++){
+
+
+				if (sceCtrlPeekBufferPositive(0, &buf, 1) < 0) {
+					return 0;
+				}
+
+				if (buf.buttons) {
+					if (buf.buttons & SCE_CTRL_START) {
+						sceKernelExitProcess(0);
+					}
+				}
 
 
 				SfcExtractPupFiles(pup_dec_dir, file_check, i, file_count, header_buffer);
 
 
-				printf("\n");
+				printf("\n\n\n\n");
 				sceKernelDelayThread(0.3*1000*1000);
 
 			}
@@ -177,7 +150,6 @@ int main(int argc, char *argv[]) {
 	psvDebugScreenInit();
 
 	printf("*** Pup Extractor ***\n\n\n");
-
 
 	NotExistMkdir(pup_dec_base_dir);
 
