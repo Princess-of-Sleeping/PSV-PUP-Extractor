@@ -1,12 +1,12 @@
 # PSV-PUP-Extractor  
   
   
-1.0  
+## 1.0  
 Initial release  
   
-1.1  
- \+ While extracting, press and hold Start button to abort extraction  
- \+ Show number of extracted files  
+## 1.1  
+\+ While extracting, press and hold Start button to abort extraction  
+\+ Show number of extracted files  
   
   
   
