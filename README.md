@@ -9,6 +9,7 @@ Initial release  
 \+ Show number of extracted files  
   
   
+## How to use  
   
 1. vpk install.  
 2. Launch PUP-Extractor once.  
@@ -19,7 +20,7 @@ Initial release  
 7. The extracted file is in "ux0:PSP2UPDAT_Dec/"  
   
   
-- Test FW
+## Test FW
 
 \- retail FW  
 1.80  
