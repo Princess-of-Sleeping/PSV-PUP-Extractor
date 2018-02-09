@@ -1,5 +1,14 @@
 # PSV-PUP-Extractor  
   
+  
+1.0  
+Initial release  
+  
+1.1  
++ While extracting, press and hold Start button to abort extraction  
++ Show number of extracted files  
+  
+  
 1. vpk install.  
 2. Launch PUP-Extractor once.  
 3. Since the PSP2UPDAT folder is created in "ux0:", put the PUP file you want to extract into this folder.(Multiple placement possible)  
@@ -11,12 +20,13 @@
   
 - Test FW
 
-retail FW  
-1.80/1.81  
+\- retail FW  
+1.80  
+1.81  
 3.60  
 3.67  
 
-devkit FW  
+\- devkit FW  
 0.945.040  
 0.996.070  
 0.996.090  
@@ -25,7 +35,7 @@ devkit FW
 1.030.071  
 3.600.011  
 
-Testkit FW  
+\- Testkit FW  
 3.60  
 　　
   
