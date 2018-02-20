@@ -26,12 +26,12 @@ Initial release  
   
 ## Test FW
 
-\- retail FW  
-1.06  
-1.80  
-1.81  
-3.60  
-3.67  
+\- retail FW<br/>
+1.06<br/>
+1.80<br/>
+1.81<br/>
+3.60<br/>
+3.67<br/>
 
 \- devkit FW  
 0.945.040  
