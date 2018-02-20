@@ -23,6 +23,7 @@ Initial release  
 ## Test FW
 
 \- retail FW  
+1.06  
 1.80  
 1.81  
 3.60  
