@@ -156,29 +156,46 @@ int main(int argc, char *argv[]) {
 	NotExistMkdir(read_pup_dir);
 
 
-	SceUID dfd2 = sceIoDopen(read_pup_dir);
 
-	int res = 0;
+	SceUID gc_update_check = sceIoOpen("gro0:psp2/update/psp2updat.pup", SCE_O_RDONLY, 0);
+	if(gc_update_check >= 0){
 
-	do {
-		SceIoDirent dir;
-		memset(&dir, 0, sizeof(SceIoDirent));
+		sceIoClose(gc_update_check);
 
-		res = sceIoDread(dfd2, &dir);
-		if (res > 0) {
+		printf("Game Card mode\n\n");
 
-			char read_pup_dir_path[0x100];
-			sprintf(read_pup_dir_path, "%s%s", read_pup_dir, dir.d_name);
+		SfcPupExtractor("gro0:psp2/update/psp2updat.pup");
 
-			SfcPupExtractor(read_pup_dir_path);
+	}else{
 
 
-		}
-	} while (res > 0);
 
-	sceIoDclose(dfd2);
+		SceUID dfd2 = sceIoDopen(read_pup_dir);
+
+		int res = 0;
+
+		do {
+			SceIoDirent dir;
+			memset(&dir, 0, sizeof(SceIoDirent));
+
+			res = sceIoDread(dfd2, &dir);
+			if (res > 0) {
+
+				char read_pup_dir_path[0x100];
+				sprintf(read_pup_dir_path, "%s%s", read_pup_dir, dir.d_name);
 
 
+				printf("Memory Card mode\n\n");
+
+				SfcPupExtractor(read_pup_dir_path);
+
+
+			}
+		} while (res > 0);
+
+		sceIoDclose(dfd2);
+
+	}
 
 
 	printf("*** ALL DONE ***\n\n");
