@@ -7,6 +7,10 @@ Initial release  
 ## 1.1  
 \+ While extracting, press and hold Start button to abort extraction  
 \+ Show number of extracted files  
+
+## 1.2  
+  
+\+ When a game card is detected, update data existing in the game card is extracted  
   
   
 ## How to use  
