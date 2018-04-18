@@ -9,10 +9,9 @@ Initial release<br>
 \+ Show number of extracted files<br>
 
 ## 1.2  
-<br>
 \+ When a game card is detected, update data existing in the game card is extracted<br>
-  
-  
+
+
 ## 1.3
 \+ Bug fixes<br>
 \+ Correcting the program<br>
