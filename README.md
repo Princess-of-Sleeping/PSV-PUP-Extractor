@@ -26,7 +26,7 @@ Initial release<br>
 4. After placing the files, start PUP-Extractor.  
 5. Wait until the Extract of the PUP file is over.  
 6. The application closes automatically when extraction of PUP file is completed  
-7. The extracted file is in "ux0:PSP2UPDAT_Dec/"  
+7. The extracted file is in "ux0:PSP2UPDAT/dec/"  
   
   
 ## Test FW
