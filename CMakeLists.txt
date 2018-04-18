@@ -14,7 +14,7 @@ include("${VITASDK}/share/vita.cmake" REQUIRED)
 set(VITA_APP_NAME "PUP-Extractor")
 set(VITA_TITLEID  "PSP2PUP00")
 
-set(VITA_VERSION  "01.00")
+set(VITA_VERSION  "01.30")
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
@@ -25,6 +25,7 @@ set(VITA_MKSFOEX_FLAGS "${VITA_MKSFOEX_FLAGS} -d PARENTAL_LEVEL=1")
 
 add_executable(${PROJECT_NAME}
   src/main.c
+  src/ctrl.c
   src/graphics.c
   src/font.c
   src/file_io.c
@@ -34,18 +35,15 @@ add_executable(${PROJECT_NAME}
 
 target_link_libraries(${PROJECT_NAME}
 
+  SceCtrl_stub
   SceDisplay_stub
   SceGxm_stub
-  SceCtrl_stub
   SceSysmodule_stub
-  SceCtrl_stub
 
 )
 
 
 vita_create_self(eboot.bin ${PROJECT_NAME} UNSAFE)
-
-
 
 vita_create_vpk(${PROJECT_NAME}.vpk ${VITA_TITLEID} eboot.bin
   VERSION ${VITA_VERSION}

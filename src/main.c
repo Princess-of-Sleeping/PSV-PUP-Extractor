@@ -1,28 +1,11 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include <psp2/kernel/processmgr.h>
-
-#include <psp2/ctrl.h>
-
-#include <psp2/io/dirent.h>
-#include <psp2/io/fcntl.h>
-#include <psp2/io/stat.h>
 
 
 #include "main.h"
-#include "graphics.h"
 
 
+int scePlayStartionUpdatePackageExtractStage1(char *ext_pup_path) {
 
-
-
-int SfcPupExtractor(pup_path) {
-
-
-
-	printf("PUP Path : %s\n\n\n",pup_path);
+	printf("PUP Path : %s\n\n\n", ext_pup_path);
 
 	printf("Start Extractor");
 
@@ -35,91 +18,70 @@ int SfcPupExtractor(pup_path) {
 	printf("\n\n\n");
 
 
-	SceUID file_check = sceIoOpen(pup_path, SCE_O_RDONLY, 0);
-	if(file_check >= 0){
+	SceUID file_check = sceIoOpen(ext_pup_path, SCE_O_RDONLY, 0);
+	if(file_check < 0){
+
+		printf("File Open Error.\n\n");
+		printf("res : 0x%08X\n\n", file_check);
+		return file_check;
+	}
 
 
-		char header_buffer[0x2000];//8KB
+	//char _header[0x2000];
+	ScePlayStartionUpdatePackageHeader1 header;
 
-		const uint32_t *header_buffer_u32t;
-		const uint16_t *header_buffer_u16t;
-
-
-		int rd = sceIoRead(file_check, header_buffer, 0x2000);
-
-		header_buffer_u32t = header_buffer;
+	sceIoPread(file_check, &header, sizeof(ScePlayStartionUpdatePackageHeader1), 0);
+	sceIoPread(file_check, temp_buff, sizeof(temp_buff), 0);
 
 
-		printf("header_buffer = 0x%X\n\n",rd);
+	printf("PUP magic check ... ");
 
 
-		printf("PUP magic check ... ");
+	if(BYTE_SWAP_64(header.magic) != 0x5343455546000001){
+
+		printf("Failed, Not PUP file.\n\n");
+		printf("0x%llX\n\n", BYTE_SWAP_64(header.magic));
+
+		return -1;
+
+	}
+
+	printf("ok, SONY PSV PUP file.\n\n");
 
 
-		if(header_buffer[0] == 0x53 &&
-		   header_buffer[1] == 0x43 &&
-		   header_buffer[2] == 0x45 &&
-		   header_buffer[3] == 0x55 &&
-		   header_buffer[4] == 0x46 &&
-		   header_buffer[5] == 0x0 &&
-		   header_buffer[6] == 0x0 &&
-		   header_buffer[7] == 0x1){
+	sceGetPlayStartionUpdatePackageInfo(&header);
+
+	press_next();
+
+	printf("\n\n");
+
+	sprintf(pup_dec_dir, "%s%s_0x%08X/", file_output_dir, pup_type_buf, header.image_version);
 
 
-			printf("ok, SONY PSV PUP file.\n\n");
+	NotExistMkdir(pup_dec_dir);
 
+	SceCtrlData buf;
 
-			SfcGetPupInfo(header_buffer);
+	for(int i=0;i<header.file_count;i++){
 
+		if (sceCtrlPeekBufferPositive(0, &buf, 1) < 0) {
+			return 0;
+		}
 
-			printf("Please wait 3 seconds.\n\n\n");
-			sceKernelDelayThread(3*1000*1000);
-
-
-
-			char pup_dec_dir[0x100];
-			sprintf(pup_dec_dir, "%s%s_%07X/", pup_dec_base_dir, pup_type, image_version);
-
-
-			NotExistMkdir(pup_dec_dir);
-
-			SceCtrlData buf;
-
-			for(int i=0;i<file_count;i++){
-
-
-				if (sceCtrlPeekBufferPositive(0, &buf, 1) < 0) {
-					return 0;
-				}
-
-				if (buf.buttons) {
-					if (buf.buttons & SCE_CTRL_START) {
-						sceKernelExitProcess(0);
-					}
-				}
-
-
-				SfcExtractPupFiles(pup_dec_dir, file_check, i, file_count, header_buffer);
-
-
-				printf("\n\n\n\n");
-				sceKernelDelayThread(0.3*1000*1000);
-
-			}
-
-
-		}else{
-
-			printf("Failed, Not PUP file.\n\n");
-
+		if (buf.buttons & SCE_CTRL_START) {
+			sceKernelExitProcess(0);
 		}
 
 
-	}else{
-		printf("Error : File does not exist.\n\n");
-		printf("res : 0x%08X\n\n",file_check);
-		return file_check;
+
+		scePlayStartionUpdatePackageExtractFiles(pup_dec_dir, file_check, i, header.file_count, temp_buff);
+
+
+		printf("\n\n");
+
 	}
+
+
 
 	sceIoClose(file_check);
 	printf("\n\n");
@@ -129,18 +91,20 @@ int SfcPupExtractor(pup_path) {
 
 
 
-int NotExistMkdir(a1){
+int NotExistMkdir(char *path){
 
-	int dfd = sceIoDopen(a1);
+	int dfd = sceIoDopen(path);
 	if(dfd >= 0){
 
 		sceIoDclose(dfd);
 
 	}else{
 
-		sceIoMkdir(a1, 0777);
+		sceIoMkdir(path, 0777);
 
 	}
+
+	return 0;
 
 }
 
@@ -149,12 +113,9 @@ int main(int argc, char *argv[]) {
 
 	psvDebugScreenInit();
 
-	printf("*** Pup Extractor ***\n\n\n");
+	NotExistMkdir(file_read_dir);
 
-	NotExistMkdir(pup_dec_base_dir);
-
-	NotExistMkdir(read_pup_dir);
-
+	NotExistMkdir(file_output_dir);
 
 
 	SceUID gc_update_check = sceIoOpen("gro0:psp2/update/psp2updat.pup", SCE_O_RDONLY, 0);
@@ -164,33 +125,40 @@ int main(int argc, char *argv[]) {
 
 		printf("Game Card mode\n\n");
 
-		SfcPupExtractor("gro0:psp2/update/psp2updat.pup");
+		scePlayStartionUpdatePackageExtractStage1("gro0:psp2/update/psp2updat.pup");
 
 	}else{
 
 
 
-		SceUID dfd2 = sceIoDopen(read_pup_dir);
+		SceUID dfd2 = sceIoDopen(file_read_dir);
 
 		int res = 0;
 
 		do {
+
+
+
 			SceIoDirent dir;
 			memset(&dir, 0, sizeof(SceIoDirent));
 
 			res = sceIoDread(dfd2, &dir);
-			if (res > 0) {
+			if (res > 0 && (!SCE_S_ISDIR(dir.d_stat.st_mode))) {
 
-				char read_pup_dir_path[0x100];
-				sprintf(read_pup_dir_path, "%s%s", read_pup_dir, dir.d_name);
-
-
+				psvDebugScreenInit();
 				printf("Memory Card mode\n\n");
 
-				SfcPupExtractor(read_pup_dir_path);
+				char read_pup_dir_path[0x100];
+				sprintf(read_pup_dir_path, "%s%s", file_read_dir, dir.d_name);
 
+				scePlayStartionUpdatePackageExtractStage1(read_pup_dir_path);
+
+				printf("output dir - %s\n\n", pup_dec_dir);
+
+				press_next();
 
 			}
+
 		} while (res > 0);
 
 		sceIoDclose(dfd2);
@@ -199,9 +167,8 @@ int main(int argc, char *argv[]) {
 
 
 	printf("*** ALL DONE ***\n\n");
-	printf("This app will close in 3 seconds!\n");
-	
-	sceKernelDelayThread(3*1000*1000);
+
+	press_exit();
 
 	sceKernelExitProcess(0);
 	return 0;
