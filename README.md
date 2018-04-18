@@ -2,17 +2,23 @@
   
   
 ## 1.0  
-Initial release  
+Initial release<br>
   
 ## 1.1  
-\+ While extracting, press and hold Start button to abort extraction  
-\+ Show number of extracted files  
+\+ While extracting, press and hold Start button to abort extraction<br>
+\+ Show number of extracted files<br>
 
 ## 1.2  
+<br>
+\+ When a game card is detected, update data existing in the game card is extracted<br>
   
-\+ When a game card is detected, update data existing in the game card is extracted  
   
-  
+## 1.3
+\+ Bug fixes<br>
+\+ Correcting the program<br>
+\+ show more information<br>
+<br>
+
 ## How to use  
   
 1. vpk install.  
