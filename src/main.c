@@ -26,8 +26,6 @@ int scePlayStartionUpdatePackageExtractStage1(char *ext_pup_path) {
 		return file_check;
 	}
 
-
-	//char _header[0x2000];
 	ScePlayStartionUpdatePackageHeader1 header;
 
 	sceIoPread(file_check, &header, sizeof(ScePlayStartionUpdatePackageHeader1), 0);
@@ -43,7 +41,6 @@ int scePlayStartionUpdatePackageExtractStage1(char *ext_pup_path) {
 		printf("0x%llX\n\n", BYTE_SWAP_64(header.magic));
 
 		return -1;
-
 	}
 
 	printf("ok, SONY PSV PUP file.\n\n");
